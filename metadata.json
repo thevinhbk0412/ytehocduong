@@ -1,0 +1,7 @@
+{
+  "name": "EduHealth - Hệ thống Y tế Học đường Toàn diện",
+  "description": "Hệ thống quản lý y tế học đường tích hợp, hỗ trợ theo dõi sức khỏe, dinh dưỡng và tư vấn tâm lý cho mọi cấp học.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
