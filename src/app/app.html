@@ -12,17 +12,27 @@
       <span class="text-white font-display font-bold text-xl whitespace-nowrap" [class.hidden]="!isSidebarOpen">EduHealth</span>
     </div>
 
-    <nav class="flex-1 px-4 space-y-2 mt-4">
-      @for (item of navItems; track item.path) {
-        <a 
-          [routerLink]="item.path"
-          routerLinkActive="bg-brand-600/10 text-brand-400 border-brand-600/20"
-          [routerLinkActiveOptions]="{exact: true}"
-          class="flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-white/5 transition-colors group border border-transparent"
-        >
-          <mat-icon class="group-hover:text-white transition-colors">{{ item.icon }}</mat-icon>
-          <span [class.hidden]="!isSidebarOpen" class="font-medium">{{ item.label }}</span>
-        </a>
+    <nav class="flex-1 px-4 space-y-6 mt-4 overflow-y-auto custom-scrollbar">
+      @for (group of navGroups; track group.label) {
+        <div class="space-y-1">
+          <p 
+            [class.opacity-0]="!isSidebarOpen"
+            class="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest transition-opacity duration-300"
+          >
+            {{ group.label }}
+          </p>
+          @for (item of group.items; track item.path) {
+            <a 
+              [routerLink]="item.path"
+              routerLinkActive="bg-brand-600/10 text-brand-400 border-brand-600/20"
+              [routerLinkActiveOptions]="{exact: true}"
+              class="flex items-center gap-4 px-4 py-2.5 rounded-xl hover:bg-white/5 transition-all group border border-transparent whitespace-nowrap"
+            >
+              <mat-icon class="group-hover:text-white transition-colors shrink-0">{{ item.icon }}</mat-icon>
+              <span [class.hidden]="!isSidebarOpen" class="font-medium text-sm">{{ item.label }}</span>
+            </a>
+          }
+        </div>
       }
     </nav>
 

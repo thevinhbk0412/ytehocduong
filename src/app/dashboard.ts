@@ -74,76 +74,104 @@ import { MatIconModule } from '@angular/material/icon';
 
       <!-- Main Content Area -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Student List -->
-        <div class="lg:col-span-2 glass-card overflow-hidden">
-          <div class="p-6 border-b border-slate-100 flex items-center justify-between">
-            <h2 class="text-xl">Danh sách học sinh ({{ healthService.currentLevel() }})</h2>
-            <button class="btn-secondary text-sm">
-              <mat-icon class="text-sm">add</mat-icon> Thêm mới
-            </button>
+        <!-- Left Column -->
+        <div class="lg:col-span-2 space-y-6">
+          <!-- Student List -->
+          <div class="glass-card overflow-hidden">
+            <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+              <h2 class="text-xl">Danh sách học sinh ({{ healthService.currentLevel() }})</h2>
+              <button class="btn-secondary text-sm">
+                <mat-icon class="text-sm">add</mat-icon> Thêm mới
+              </button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-50/50 text-slate-500 text-xs uppercase tracking-wider">
+                    <th class="px-6 py-4 font-semibold">Tên học sinh</th>
+                    <th class="px-6 py-4 font-semibold">Lớp</th>
+                    <th class="px-6 py-4 font-semibold">Chiều cao/Cân nặng</th>
+                    <th class="px-6 py-4 font-semibold">Trạng thái</th>
+                    <th class="px-6 py-4 font-semibold">Hành động</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  @for (student of currentStudents(); track student.id) {
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                      <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                          <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600">
+                            {{ student.name.charAt(0) }}
+                          </div>
+                          <div>
+                            <p class="font-medium text-slate-900">{{ student.name }}</p>
+                            <p class="text-xs text-slate-500">ID: {{ student.id }}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 text-sm text-slate-600">{{ student.grade }}</td>
+                      <td class="px-6 py-4 text-sm text-slate-600">
+                        {{ student.height }}cm / {{ student.weight }}kg
+                      </td>
+                      <td class="px-6 py-4">
+                        <span 
+                          [class.bg-green-100]="student.status === 'Khỏe mạnh'"
+                          [class.text-green-700]="student.status === 'Khỏe mạnh'"
+                          [class.bg-amber-100]="student.status === 'Cần theo dõi'"
+                          [class.text-amber-700]="student.status === 'Cần theo dõi'"
+                          [class.bg-red-100]="student.status === 'Bệnh'"
+                          [class.text-red-700]="student.status === 'Bệnh'"
+                          class="px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide"
+                        >
+                          {{ student.status }}
+                        </span>
+                      </td>
+                      <td class="px-6 py-4">
+                        <button class="text-slate-400 hover:text-brand-600 transition-colors">
+                          <mat-icon>visibility</mat-icon>
+                        </button>
+                      </td>
+                    </tr>
+                  }
+                  @if (currentStudents().length === 0) {
+                    <tr>
+                      <td colspan="5" class="px-6 py-12 text-center text-slate-400 italic">
+                        Chưa có dữ liệu học sinh cho cấp học này.
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="bg-slate-50/50 text-slate-500 text-xs uppercase tracking-wider">
-                  <th class="px-6 py-4 font-semibold">Tên học sinh</th>
-                  <th class="px-6 py-4 font-semibold">Lớp</th>
-                  <th class="px-6 py-4 font-semibold">Chiều cao/Cân nặng</th>
-                  <th class="px-6 py-4 font-semibold">Trạng thái</th>
-                  <th class="px-6 py-4 font-semibold">Hành động</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100">
-                @for (student of currentStudents(); track student.id) {
-                  <tr class="hover:bg-slate-50/50 transition-colors">
-                    <td class="px-6 py-4">
-                      <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600">
-                          {{ student.name.charAt(0) }}
-                        </div>
-                        <div>
-                          <p class="font-medium text-slate-900">{{ student.name }}</p>
-                          <p class="text-xs text-slate-500">ID: {{ student.id }}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 text-sm text-slate-600">{{ student.grade }}</td>
-                    <td class="px-6 py-4 text-sm text-slate-600">
-                      {{ student.height }}cm / {{ student.weight }}kg
-                    </td>
-                    <td class="px-6 py-4">
-                      <span 
-                        [class.bg-green-100]="student.status === 'Khỏe mạnh'"
-                        [class.text-green-700]="student.status === 'Khỏe mạnh'"
-                        [class.bg-amber-100]="student.status === 'Cần theo dõi'"
-                        [class.text-amber-700]="student.status === 'Cần theo dõi'"
-                        [class.bg-red-100]="student.status === 'Bệnh'"
-                        [class.text-red-700]="student.status === 'Bệnh'"
-                        class="px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide"
-                      >
-                        {{ student.status }}
-                      </span>
-                    </td>
-                    <td class="px-6 py-4">
-                      <button class="text-slate-400 hover:text-brand-600 transition-colors">
-                        <mat-icon>visibility</mat-icon>
-                      </button>
-                    </td>
-                  </tr>
-                }
-                @if (currentStudents().length === 0) {
-                  <tr>
-                    <td colspan="5" class="px-6 py-12 text-center text-slate-400 italic">
-                      Chưa có dữ liệu học sinh cho cấp học này.
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
+
+          <!-- Detailed Level Tasks -->
+          <div class="glass-card p-6">
+            <h2 class="text-xl mb-6 flex items-center gap-2">
+              <mat-icon class="text-brand-600">assignment</mat-icon>
+              Chi tiết nhiệm vụ Y tế: {{ healthService.currentLevel() }}
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              @for (section of getLevelDetails(); track section.title) {
+                <div class="space-y-4">
+                  <h3 class="text-sm font-bold text-brand-700 uppercase tracking-wider border-l-4 border-brand-500 pl-3">
+                    {{ section.title }}
+                  </h3>
+                  <ul class="space-y-3">
+                    @for (item of section.items; track item) {
+                      <li class="flex items-start gap-2 text-sm text-slate-600">
+                        <mat-icon class="text-brand-400 text-xs mt-1">fiber_manual_record</mat-icon>
+                        {{ item }}
+                      </li>
+                    }
+                  </ul>
+                </div>
+              }
+            </div>
           </div>
         </div>
 
-        <!-- Level Specific Focus -->
+        <!-- Right Column (Sidebar) -->
         <div class="space-y-6">
           <div class="glass-card p-6">
             <h2 class="text-xl mb-4 flex items-center gap-2">
@@ -243,6 +271,38 @@ export class DashboardComponent {
           'Kỹ năng quản lý căng thẳng (stress)',
           'Định hướng nghề nghiệp theo sức khỏe',
           'Câu lạc bộ & Ngày hội sức khỏe học sinh'
+        ];
+      default:
+        return [];
+    }
+  }
+
+  getLevelDetails() {
+    const level = this.healthService.currentLevel();
+    switch (level) {
+      case SchoolLevel.PRESCHOOL:
+        return [
+          { title: 'Quản lý & Chăm sóc', items: ['Khám sức khỏe đầu vào và định kỳ 2 lần/năm', 'Theo dõi chiều cao, cân nặng hàng tháng trên biểu đồ', 'Kiểm tra sức khỏe hàng ngày khi trẻ đến lớp'] },
+          { title: 'Dinh dưỡng & An toàn', items: ['Xây dựng thực đơn đa dạng, cân đối theo mùa', 'Giám sát quy trình bếp ăn 3 bước', 'Kiểm soát đồ dùng, đồ chơi an toàn, không góc cạnh'] },
+          { title: 'Giáo dục Sức khỏe', items: ['Dạy kỹ năng rửa tay bằng xà phòng', 'Hướng dẫn tự đi vệ sinh và che miệng khi ho', 'Hình thành thói quen vệ sinh thông qua trò chơi'] }
+        ];
+      case SchoolLevel.PRIMARY:
+        return [
+          { title: 'Phòng chống Bệnh học đường', items: ['Sàng lọc cận thị, loạn thị, cong vẹo cột sống', 'Chương trình Nha học đường: khám răng, súc miệng Flour', 'Hướng dẫn chải răng đúng cách và vệ sinh răng miệng'] },
+          { title: 'Dinh dưỡng & Vệ sinh', items: ['Triển khai chương trình Sữa học đường hiệu quả', 'Giám sát nhà vệ sinh và nguồn nước sạch tiêu chuẩn', 'Lồng ghép giáo dục dinh dưỡng vào giờ học chính khóa'] },
+          { title: 'Sức khỏe Tinh thần', items: ['Quan sát phát hiện dấu hiệu tự ti, lo âu, bị bắt nạt', 'Hỗ trợ kỹ năng an toàn giao thông và phòng đuối nước', 'Phối hợp gia đình hỗ trợ tâm lý sớm cho học sinh'] }
+        ];
+      case SchoolLevel.SECONDARY:
+        return [
+          { title: 'Sức khỏe Tuổi dậy thì', items: ['Tư vấn thay đổi tâm sinh lý giai đoạn dậy thì', 'Giáo dục giới tính, tình bạn và tình yêu an toàn', 'Khám sàng lọc sự phát triển thể chất dậy thì'] },
+          { title: 'Phòng chống Nguy cơ', items: ['Tuyên truyền tác hại thuốc lá, rượu bia, ma túy', 'Hướng dẫn sử dụng Internet và mạng xã hội an toàn', 'Triển khai quy tắc ứng xử, phòng chống bạo lực học đường'] },
+          { title: 'Tư vấn Tâm lý', items: ['Thiết lập phòng tư vấn tâm lý học đường chuyên nghiệp', 'Hỗ trợ giải quyết áp lực học tập và mối quan hệ bạn bè', 'Tập huấn kỹ năng sơ cứu cơ bản cho học sinh'] }
+        ];
+      case SchoolLevel.HIGH_SCHOOL:
+        return [
+          { title: 'Sức khỏe Sinh sản & Lối sống', items: ['Kiến thức tránh thai, phòng chống STIs/HIV/AIDS', 'Xây dựng chế độ ăn uống, tập luyện khoa học', 'Tư vấn nghề nghiệp phù hợp với tình trạng sức khỏe'] },
+          { title: 'Quản lý Căng thẳng', items: ['Workshop kỹ năng quản lý stress và cân bằng cuộc sống', 'Hỗ trợ tâm lý chuyên sâu (trầm cảm, rối loạn lo âu)', 'Cung cấp kênh tư vấn cá nhân bảo mật'] },
+          { title: 'Hoạt động Cộng đồng', items: ['Khuyến khích thành lập Câu lạc bộ Sức khỏe học sinh', 'Tổ chức Ngày hội sức khỏe thường niên', 'Lan tỏa kiến thức sức khỏe thông qua các dự án học sinh'] }
         ];
       default:
         return [];
